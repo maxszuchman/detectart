@@ -68,6 +68,7 @@ public class PushNotificationService {
         log.info(body.toPrettyString());
 
         RequestEntity<ObjectNode> requestEntity = RequestEntity.post(FIREBASE_URI)
+                                                               .headers(headers)
                                                                .body(body);
 
         ResponseEntity<ObjectNode> response = restTemplate.exchange(requestEntity, ObjectNode.class);
