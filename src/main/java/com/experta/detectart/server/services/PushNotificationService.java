@@ -65,7 +65,7 @@ public class PushNotificationService {
                 , user.getLastName()
                 , user.getEmail()
                 , user.getApplicationToken());
-        log.info(body.asText());
+        log.info(body.toPrettyString());
 
         RequestEntity<ObjectNode> requestEntity = RequestEntity.post(FIREBASE_URI)
                                                                .body(body);
