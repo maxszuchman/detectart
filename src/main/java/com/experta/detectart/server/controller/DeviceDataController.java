@@ -51,7 +51,7 @@ public class DeviceDataController {
                 throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
             }
 
-            notificationService.pushNoificationToToken(user);
+            notificationService.pushNoificationToToken(user, device.get());
         }
 
         return ResponseEntity.ok().build();
