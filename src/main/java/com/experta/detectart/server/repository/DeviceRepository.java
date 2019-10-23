@@ -10,7 +10,7 @@ import com.experta.detectart.server.model.Device;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, String> {
-    Collection<Device> findByUserId(Long userId);
+    Collection<Device> findByUserId(String userId);
     Optional<Device> findByMacAddress(String macAddress);
-    Optional<Device> findByMacAddressAndUserId(String id, Long userId);
+    Optional<Device> findByMacAddressAndUserId(String id, String userId);
 }

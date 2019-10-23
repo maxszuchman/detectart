@@ -10,6 +10,6 @@ import com.experta.detectart.server.model.Contact;
 
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-    Collection<Contact> findByUserId(Long userId);
-    Optional<Contact> findByIdAndUserId(Long id, Long userId);
+    Collection<Contact> findByUserId(String userId);
+    Optional<Contact> findByIdAndUserId(Long id, String userId);
 }

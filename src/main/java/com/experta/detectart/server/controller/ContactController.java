@@ -33,13 +33,13 @@ public class ContactController {
     private UserRepository userRepository;
 
     @GetMapping(USERS + "/{userId}" + CONTACTS)
-    public Collection<Contact> getAllContactsByUserId(@PathVariable (value = "userId") final Long userId) {
+    public Collection<Contact> getAllContactsByUserId(@PathVariable (value = "userId") final String userId) {
         return contactRepository.findByUserId(userId);
     }
 
     @GetMapping(USERS + "/{userId}" + CONTACTS + "/{contactId}")
     public Contact getContactByUserIdAndContactId(
-                                    @PathVariable (value = "userId") final Long userId
+                                    @PathVariable (value = "userId") final String userId
                                     , @PathVariable (value = "contactId") final Long contactId) {
 
         if(!userRepository.existsById(userId)) {
@@ -51,7 +51,7 @@ public class ContactController {
     }
 
     @PostMapping(USERS + "/{userId}" + CONTACTS)
-    public Contact createContact(@PathVariable (value = "userId") final Long userId,
+    public Contact createContact(@PathVariable (value = "userId") final String userId,
                                  @Valid @RequestBody final Contact contact) {
 
         return userRepository.findById(userId).map(user -> {
@@ -63,7 +63,7 @@ public class ContactController {
     }
 
     @PutMapping(USERS + "/{userId}" + CONTACTS + "/{contactId}")
-    public Contact updateContact(@PathVariable (value = "userId") final Long userId,
+    public Contact updateContact(@PathVariable (value = "userId") final String userId,
                                  @PathVariable (value = "contactId") final Long contactId,
                                  @Valid @RequestBody final Contact contactRequest) {
         if(!userRepository.existsById(userId)) {
@@ -79,7 +79,7 @@ public class ContactController {
     }
 
     @DeleteMapping(USERS + "/{userId}" + CONTACTS + "/{contactId}")
-    public ResponseEntity<?> deleteContact(@PathVariable (value = "userId") final Long userId,
+    public ResponseEntity<?> deleteContact(@PathVariable (value = "userId") final String userId,
                               @PathVariable (value = "contactId") final Long contactId) {
         return contactRepository.findByIdAndUserId(contactId, userId).map(contact -> {
 

@@ -33,7 +33,7 @@ public class DeviceController {
     private UserRepository userRepository;
 
     @GetMapping(USERS + "/{userId}" + DEVICES)
-    public Collection<Device> getAllDevicessByUserId(@PathVariable (value = "userId") final Long userId) {
+    public Collection<Device> getAllDevicessByUserId(@PathVariable (value = "userId") final String userId) {
         return deviceRepository.findByUserId(userId);
     }
 
@@ -46,7 +46,7 @@ public class DeviceController {
 
     @GetMapping(USERS + "/{userId}" + DEVICES + "/{macAddress}")
     public Device getDeviceByUserIdAndMacAddress(
-                                    @PathVariable (value = "userId") final Long userId
+                                    @PathVariable (value = "userId") final String userId
                                     , @PathVariable (value = "macAddress") final String macAddress) {
 
         if(!userRepository.existsById(userId)) {
@@ -58,7 +58,7 @@ public class DeviceController {
     }
 
     @PostMapping(USERS + "/{userId}" + DEVICES)
-    public Device createDevice(@PathVariable (value = "userId") final Long userId,
+    public Device createDevice(@PathVariable (value = "userId") final String userId,
                                  @Valid @RequestBody final Device device) {
 
         return userRepository.findById(userId).map(user -> {
@@ -70,7 +70,7 @@ public class DeviceController {
     }
 
     @PutMapping(USERS + "/{userId}" + DEVICES + "/{macAddress}")
-    public Device updateDevice(@PathVariable (value = "userId") final Long userId,
+    public Device updateDevice(@PathVariable (value = "userId") final String userId,
                                  @PathVariable (value = "macAddress") final String macAddress,
                                  @Valid @RequestBody final Device deviceRequest) {
 
@@ -87,7 +87,7 @@ public class DeviceController {
     }
 
     @DeleteMapping(USERS + "/{userId}" + DEVICES + "/{macAddress}")
-    public ResponseEntity<?> deleteDevice(@PathVariable (value = "userId") final Long userId,
+    public ResponseEntity<?> deleteDevice(@PathVariable (value = "userId") final String userId,
                               @PathVariable (value = "macAddress") final String macAddress) {
         return deviceRepository.findByMacAddressAndUserId(macAddress, userId).map(contact -> {
 
