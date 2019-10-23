@@ -61,8 +61,7 @@ public class PushNotificationService {
         body.set("registration_ids", registration_ids);
 
         log.info("Sending an ALARM push notification to {} {}, {}, with token {}"
-                , user.getFirstName()
-                , user.getLastName()
+                , user.getFullName()
                 , user.getEmail()
                 , user.getApplicationToken());
         log.info(body.toPrettyString());

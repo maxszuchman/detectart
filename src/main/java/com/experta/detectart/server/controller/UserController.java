@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping(USERS + "/{userId}")
-    public User getUser(@PathVariable final Long userId) {
+    public User getUser(@PathVariable final String userId) {
         return userRepository.findById(userId)
                              .orElseThrow(() -> new ResourceNotFoundException("UserId " + userId + " not found"));
     }
@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PutMapping(USERS + "/{userId}")
-    public User updateUser(@PathVariable final Long userId, @Valid @RequestBody final User userRequest) {
+    public User updateUser(@PathVariable final String userId, @Valid @RequestBody final User userRequest) {
 
         return userRepository.findById(userId).map(user -> {
 
@@ -55,7 +55,7 @@ public class UserController {
 
 
     @DeleteMapping(USERS + "/{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable final Long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable final String userId) {
         return userRepository.findById(userId).map(user -> {
             userRepository.delete(user);
             return ResponseEntity.ok().build();
