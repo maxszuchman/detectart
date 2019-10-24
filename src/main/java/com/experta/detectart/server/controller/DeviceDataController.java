@@ -54,6 +54,7 @@ public class DeviceDataController {
                 throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
             }
 
+            updateDeviceSensorsStatus(deviceData, device);
             notificationService.pushNotificationForEachSensorToToken(user, device);
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
@@ -63,6 +64,23 @@ public class DeviceDataController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    private void updateDeviceSensorsStatus(@Valid final DeviceData deviceData, final Device device) {
+
+        if (deviceData.getSensor1().getStatus() == Status.ALARM) {
+            device.setSensor1Status(Status.ALARM);
+        }
+
+        if (deviceData.getSensor2().getStatus() == Status.ALARM) {
+            device.setSensor2Status(Status.ALARM);
+        }
+
+        if (deviceData.getSensor3().getStatus() == Status.ALARM) {
+            device.setSensor3Status(Status.ALARM);
+        }
+
+        deviceRepository.save(device);
     }
 
 //    @GetMapping(USERS + "/{userId}" + DEVICES)
