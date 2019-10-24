@@ -1,6 +1,8 @@
 package com.experta.detectart.server.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -42,14 +44,16 @@ public class Device extends AuditModel {
     @NotNull
     private Double accuracy;
 
-    @JsonIgnore
+    @Enumerated(value = EnumType.STRING)
     private Status sensor1Status;
-    @JsonIgnore
+    @Enumerated(value = EnumType.STRING)
     private Status sensor2Status;
-    @JsonIgnore
+    @Enumerated(value = EnumType.STRING)
     private Status sensor3Status;
 
-    public Device() {}
+    public Device() {
+        setGeneralStatusAsNormal();
+    }
 
     public Device(@NotEmpty final String macAddress, final User user, final String alias, final String model, @NotEmpty final Double latitude,
             @NotEmpty final Double longitude, @NotEmpty final Double accuracy) {
@@ -61,6 +65,8 @@ public class Device extends AuditModel {
         this.latitude = latitude;
         this.longitude = longitude;
         this.accuracy = accuracy;
+
+        setGeneralStatusAsNormal();
     }
 
     public String getMacAddress() {
@@ -143,7 +149,6 @@ public class Device extends AuditModel {
         this.sensor3Status = sensor3Status;
     }
 
-    @JsonIgnore
     public Status getGeneralStatus() {
         if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
             return Status.NORMAL;
