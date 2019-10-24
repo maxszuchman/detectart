@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.experta.detectart.server.model.deviceData.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -40,6 +41,13 @@ public class Device extends AuditModel {
 
     @NotNull
     private Double accuracy;
+
+    @JsonIgnore
+    private Status sensor1Status;
+    @JsonIgnore
+    private Status sensor2Status;
+    @JsonIgnore
+    private Status sensor3Status;
 
     public Device() {}
 
@@ -111,6 +119,44 @@ public class Device extends AuditModel {
         this.accuracy = accuracy;
     }
 
+    public Status getSensor1Status() {
+        return sensor1Status;
+    }
+
+    public void setSensor1Status(final Status sensor1Status) {
+        this.sensor1Status = sensor1Status;
+    }
+
+    public Status getSensor2Status() {
+        return sensor2Status;
+    }
+
+    public void setSensor2Status(final Status sensor2Status) {
+        this.sensor2Status = sensor2Status;
+    }
+
+    public Status getSensor3Status() {
+        return sensor3Status;
+    }
+
+    public void setSensor3Status(final Status sensor3Status) {
+        this.sensor3Status = sensor3Status;
+    }
+
+    public Status getGeneralStatus() {
+        if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
+            return Status.NORMAL;
+        } else {
+            return Status.ALARM;
+        }
+    }
+
+    public void setGeneralStatusAsNormal() {
+        sensor1Status = Status.NORMAL;
+        sensor2Status = Status.NORMAL;
+        sensor3Status = Status.NORMAL;
+    }
+
     public Device copyInto(final Device other) {
 
         other.setMacAddress(this.macAddress);
@@ -119,6 +165,9 @@ public class Device extends AuditModel {
         other.setLatitude(this.latitude);
         other.setLongitude(this.longitude);
         other.setAccuracy(this.accuracy);
+        other.setSensor1Status(this.sensor1Status);
+        other.setSensor2Status(this.sensor2Status);
+        other.setSensor3Status(this.sensor3Status);
 
         return other;
     }

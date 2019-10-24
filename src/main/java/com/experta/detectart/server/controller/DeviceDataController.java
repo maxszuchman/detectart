@@ -36,22 +36,30 @@ public class DeviceDataController {
     @PostMapping(DEVICE_DATA)
     public ResponseEntity<?> createDeviceData(@Valid @RequestBody final DeviceData deviceData) {
 
-        Optional<Device> device = deviceRepository.findByMacAddress(deviceData.getMacAddress());
+        Optional<Device> optDevice = deviceRepository.findByMacAddress(deviceData.getMacAddress());
 
-        if (!device.isPresent()) {
+        if (!optDevice.isPresent()) {
             throw new ResourceNotFoundException("Device with Mac Address " + deviceData.getMacAddress() + " not found");
         }
 
         deviceDataRepository.save(deviceData);
 
-        if (deviceData.getStatus() == Status.ALARM) {
-            User user = device.get().getUser();
+        Device device = optDevice.get();
+
+        if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() == Status.NORMAL) {
+
+            User user = optDevice.get().getUser();
 
             if (user == null) {
                 throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
             }
 
-            notificationService.pushNoificationToToken(user, device.get());
+            notificationService.pushNotificationForEachSensorToToken(user, device);
+
+        } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
+
+            device.setGeneralStatusAsNormal();
+            deviceRepository.save(device);
         }
 
         return ResponseEntity.ok().build();
