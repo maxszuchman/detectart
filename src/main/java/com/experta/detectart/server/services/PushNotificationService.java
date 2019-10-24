@@ -62,7 +62,7 @@ public class PushNotificationService {
 
         log.info("Sending an ALARM push notification to {} {}, {}, with token {}"
                 , user.getFullName()
-                , user.getEmail()
+                , user.getId()
                 , user.getApplicationToken());
         log.info(body.toPrettyString());
 

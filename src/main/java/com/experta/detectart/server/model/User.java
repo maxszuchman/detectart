@@ -17,7 +17,7 @@ public class User extends AuditModel {
     @Id
     @NotEmpty
     @Size(max = 100)
-    private String email;
+    private String id;
 
     @NotEmpty
     @Size(max = 250)
@@ -31,7 +31,7 @@ public class User extends AuditModel {
             @NotEmpty @Size(max = 100) final String email, final String applicationToken) {
         super();
         this.fullName = fullName;
-        this.email = email;
+        this.id = email;
         this.applicationToken = applicationToken;
     }
 //
@@ -51,12 +51,12 @@ public class User extends AuditModel {
         this.fullName = lastName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getId() {
+        return id;
     }
 
-    public void setEmail(final String email) {
-        this.email = email;
+    public void setId(final String email) {
+        this.id = email;
     }
 
     public String getApplicationToken() {
@@ -70,7 +70,7 @@ public class User extends AuditModel {
     public User copyInto(final User other) {
 
         other.setFullName(this.fullName);
-        other.setEmail(this.email);
+        other.setId(this.id);
         other.setApplicationToken(this.applicationToken);
 
         return other;
