@@ -143,6 +143,7 @@ public class Device extends AuditModel {
         this.sensor3Status = sensor3Status;
     }
 
+    @JsonIgnore
     public Status getGeneralStatus() {
         if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
             return Status.NORMAL;
@@ -151,6 +152,7 @@ public class Device extends AuditModel {
         }
     }
 
+    @JsonIgnore
     public void setGeneralStatusAsNormal() {
         sensor1Status = Status.NORMAL;
         sensor2Status = Status.NORMAL;
