@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.experta.detectart.server.exception.ExistentDeviceException;
 import com.experta.detectart.server.exception.ResourceNotFoundException;
 import com.experta.detectart.server.model.Device;
 import com.experta.detectart.server.repository.DeviceRepository;
@@ -60,6 +61,12 @@ public class DeviceController {
     @PostMapping(USERS + "/{userId}" + DEVICES)
     public Device createDevice(@PathVariable (value = "userId") final String userId,
                                  @Valid @RequestBody final Device device) {
+
+        if (deviceRepository.existsById(device.getMacAddress())) {
+            throw new ExistentDeviceException("Device " + device.getMacAddress()
+            + " is already attached to user "
+            + deviceRepository.findByMacAddress(device.getMacAddress()).get().getUser().getId());
+        }
 
         return userRepository.findById(userId).map(user -> {
 
