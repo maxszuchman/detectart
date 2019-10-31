@@ -63,9 +63,10 @@ public class DeviceController {
                                  @Valid @RequestBody final Device device) {
 
         if (deviceRepository.existsById(device.getMacAddress())) {
+
             throw new ExistentDeviceException("Device " + device.getMacAddress()
-            + " is already attached to user "
-            + deviceRepository.findByMacAddress(device.getMacAddress()).get().getUser().getId());
+                    + " is already attached to user "
+                    + deviceRepository.findByMacAddress(device.getMacAddress()).get().getUser().getId());
         }
 
         return userRepository.findById(userId).map(user -> {
