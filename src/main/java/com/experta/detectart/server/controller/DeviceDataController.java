@@ -14,6 +14,7 @@ import com.experta.detectart.server.exception.ResourceNotFoundException;
 import com.experta.detectart.server.model.Device;
 import com.experta.detectart.server.model.User;
 import com.experta.detectart.server.model.deviceData.DeviceData;
+import com.experta.detectart.server.model.deviceData.Position;
 import com.experta.detectart.server.model.deviceData.Status;
 import com.experta.detectart.server.repository.DeviceDataRepository;
 import com.experta.detectart.server.repository.DeviceRepository;
@@ -36,6 +37,8 @@ public class DeviceDataController {
     @PostMapping(DEVICE_DATA)
     public ResponseEntity<?> createDeviceData(@Valid @RequestBody final DeviceData deviceData) {
 
+        boolean updateDevice = false;
+
         Optional<Device> optDevice = deviceRepository.findByMacAddress(deviceData.getMacAddress());
 
         if (!optDevice.isPresent()) {
@@ -54,12 +57,29 @@ public class DeviceDataController {
                 throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
             }
 
+            updateDevice = true;
             updateDeviceSensorsStatus(deviceData, device);
             notificationService.pushNotificationForEachSensorToToken(user, device);
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
+            updateDevice = true;
             device.setGeneralStatusAsNormal();
+        }
+
+        // Check si el dispositivo fue movido de lugar, en cuyo caso hacer update
+        Position deviceDataPosition = deviceData.getPosition();
+        if (deviceDataPosition.getLatitude() != device.getLatitude()
+            || deviceDataPosition.getLongitude() != device.getLongitude()
+            || deviceDataPosition.getAccuracy() != device.getAccuracy()) {
+
+            updateDevice = true;
+            device.setLatitude(deviceDataPosition.getLatitude());
+            device.setLongitude(deviceDataPosition.getLongitude());
+            device.setAccuracy(deviceDataPosition.getAccuracy());
+        }
+
+        if (updateDevice) {
             deviceRepository.save(device);
         }
 
@@ -79,8 +99,6 @@ public class DeviceDataController {
         if (deviceData.getSensor3().getStatus() == Status.ALARM) {
             device.setSensor3Status(Status.ALARM);
         }
-
-        deviceRepository.save(device);
     }
 
 //    @GetMapping(USERS + "/{userId}" + DEVICES)
