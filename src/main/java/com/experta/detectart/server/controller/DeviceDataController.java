@@ -1,5 +1,7 @@
 package com.experta.detectart.server.controller;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -37,8 +39,6 @@ public class DeviceDataController {
     @PostMapping(DEVICE_DATA)
     public ResponseEntity<?> createDeviceData(@Valid @RequestBody final DeviceData deviceData) {
 
-        boolean updateDevice = false;
-
         Optional<Device> optDevice = deviceRepository.findByMacAddress(deviceData.getMacAddress());
 
         if (!optDevice.isPresent()) {
@@ -49,6 +49,9 @@ public class DeviceDataController {
 
         Device device = optDevice.get();
 
+        // Actualizamos el momento en que se refrescaron los datos del dispositivo
+        device.setSensorDataUpdatedAt(Date.from(Instant.now()));
+
         if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() == Status.NORMAL) {
 
             User user = optDevice.get().getUser();
@@ -57,13 +60,11 @@ public class DeviceDataController {
                 throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
             }
 
-            updateDevice = true;
             updateDeviceSensorsStatus(deviceData, device);
             notificationService.pushNotificationForEachSensorToToken(user, device);
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
-            updateDevice = true;
             device.setGeneralStatusAsNormal();
         }
 
@@ -73,15 +74,12 @@ public class DeviceDataController {
             || deviceDataPosition.getLongitude() != device.getLongitude()
             || deviceDataPosition.getAccuracy() != device.getAccuracy()) {
 
-            updateDevice = true;
             device.setLatitude(deviceDataPosition.getLatitude());
             device.setLongitude(deviceDataPosition.getLongitude());
             device.setAccuracy(deviceDataPosition.getAccuracy());
         }
 
-        if (updateDevice) {
-            deviceRepository.save(device);
-        }
+        deviceRepository.save(device);
 
         return ResponseEntity.ok().build();
     }

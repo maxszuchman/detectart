@@ -1,5 +1,8 @@
 package com.experta.detectart.server.model;
 
+import java.time.Instant;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "devices")
 public class Device extends AuditModel {
 
+    public static final long MILLIS_WITHOUT_DATA_TO_SET_AS_INACTIVE =  60000L; // A minute
+
     @Id
     @NotEmpty
     private String macAddress;
@@ -34,6 +39,8 @@ public class Device extends AuditModel {
     private String alias;
 
     private String model;
+
+    private Date sensorDataUpdatedAt;
 
     @NotNull
     private Double latitude;
@@ -52,6 +59,7 @@ public class Device extends AuditModel {
     private Status sensor3Status;
 
     public Device() {
+        sensorDataUpdatedAt = Date.from(Instant.now());
         setGeneralStatusAsNormal();
     }
 
@@ -66,6 +74,7 @@ public class Device extends AuditModel {
         this.longitude = longitude;
         this.accuracy = accuracy;
 
+        sensorDataUpdatedAt = Date.from(Instant.now());
         setGeneralStatusAsNormal();
     }
 
@@ -150,10 +159,20 @@ public class Device extends AuditModel {
     }
 
     public Status getGeneralStatus() {
-        if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
-            return Status.NORMAL;
+
+        Date now = Date.from(Instant.now());
+        long diffInMillies = Math.abs(now.getTime() - sensorDataUpdatedAt.getTime());
+
+        if (diffInMillies > MILLIS_WITHOUT_DATA_TO_SET_AS_INACTIVE) {
+
+            return Status.INACTIVE;
         } else {
-            return Status.ALARM;
+
+            if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
+                return Status.NORMAL;
+            } else {
+                return Status.ALARM;
+            }
         }
     }
 
@@ -162,6 +181,14 @@ public class Device extends AuditModel {
         sensor1Status = Status.NORMAL;
         sensor2Status = Status.NORMAL;
         sensor3Status = Status.NORMAL;
+    }
+
+    public Date getSensorDataUpdatedAt() {
+        return sensorDataUpdatedAt;
+    }
+
+    public void setSensorDataUpdatedAt(final Date sensorDataUpdatedAt) {
+        this.sensorDataUpdatedAt = sensorDataUpdatedAt;
     }
 
     public Device copyInto(final Device other) {
@@ -175,6 +202,7 @@ public class Device extends AuditModel {
         other.setSensor1Status(this.sensor1Status);
         other.setSensor2Status(this.sensor2Status);
         other.setSensor3Status(this.sensor3Status);
+        other.setSensorDataUpdatedAt(this.sensorDataUpdatedAt);
 
         return other;
     }
