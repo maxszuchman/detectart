@@ -52,7 +52,7 @@ public class DeviceDataController {
         // Actualizamos el momento en que se refrescaron los datos del dispositivo
         device.setSensorDataUpdatedAt(Date.from(Instant.now()));
 
-        if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() == Status.NORMAL) {
+        if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() != Status.ALARM) {
 
             User user = optDevice.get().getUser();
 
