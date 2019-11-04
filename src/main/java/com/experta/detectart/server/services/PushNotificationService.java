@@ -25,7 +25,7 @@ public class PushNotificationService {
     private static final Logger log = LoggerFactory.getLogger(PushNotificationService.class);
 
     private static final String FIREBASE_URL_STRING = "https://fcm.googleapis.com/fcm/send";
-    private static final String FIREBASE_AUTHORIZATION_FOR_EXPERTA = "key=AAAA6lH4ZNw:APA91bH49ZO7JfixyF7YhveBoduPqOEF8yZS8r-J33EztXU2QvVpSKCfdgx1_cCATVPRvNoGEpcJJVLekq_DyZaYGU8WuL6OdQrBn1PrXxnD0wJGiRLvocxJ8DyVfydkVkqfYi_A3ZnM";
+    private static final String FIREBASE_AUTHORIZATION_FOR_EXPERTA = "key=AAAA8u0Mou4:APA91bHCAeuMRdoCGz0RwdbwrilbODwm7jg_tePILZdFGNOTsKZWirY8iO5SLwcXoXU1cmk24eBiAARXv--47_-2uTdwEzfaoQngYmR_jK3mM1lo9n0OAd2H05Q7x4ia1Ie_dn6zaoUq";
 
     private RestTemplate restTemplate = new RestTemplate();
     private URI FIREBASE_URI;
