@@ -52,13 +52,13 @@ public class DeviceDataController {
         // Actualizamos el momento en que se refrescaron los datos del dispositivo
         device.setSensorDataUpdatedAt(Date.from(Instant.now()));
 
+        User user = optDevice.get().getUser();
+
+        if (user == null) {
+            throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
+        }
+
         if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() != Status.ALARM) {
-
-            User user = optDevice.get().getUser();
-
-            if (user == null) {
-                throw new ResourceNotFoundException("The device with Mac Address " + deviceData.getMacAddress() + " is not registered to an existing user.");
-            }
 
             updateDeviceSensorsStatus(deviceData, device);
             notificationService.pushNotificationForEachSensorToToken(user, device);
@@ -66,6 +66,7 @@ public class DeviceDataController {
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
             device.setGeneralStatusAsNormal();
+            notificationService.pushNotificationDeviceBackToNormal(user, device);
         }
 
         // Check si el dispositivo fue movido de lugar, en cuyo caso hacer update

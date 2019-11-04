@@ -47,7 +47,7 @@ public class PushNotificationService {
         body.set("notification", notification);
         body.set("registration_ids", registration_ids);
 
-        log.info("Sending an ALARM push notification to {} {}, {}, with token {} and body {}"
+        log.info("Sending a PUSH notification to {} {}, {}, with token {} and body {}"
                 , user.getFullName()
                 , user.getId()
                 , user.getApplicationToken()
@@ -97,6 +97,45 @@ public class PushNotificationService {
             notification.put("body", "Humo encima del límite seguro en dispositivo ID: "
                                         + device.getAlias());
             notification.put("title", "Alarma por HUMO!");
+
+            pushNotification(user, headers, notification, registration_ids);
+        }
+    }
+
+    public void pushNotificationDeviceBackToNormal(final User user, final Device device) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add(HttpHeaders.AUTHORIZATION, FIREBASE_AUTHORIZATION_FOR_EXPERTA);
+
+        ArrayNode registration_ids = mapper.createArrayNode();
+        registration_ids.add(user.getApplicationToken());
+
+        ObjectNode notification = mapper.createObjectNode();
+        notification.put("icon", "experta_logo");
+
+        if (device.getSensor1Status() == Status.NORMAL) {
+            notification.put("click_action", ".MainActivity");
+            notification.put("body", "Monóxido de carbóno de vuelta a estado NORMAL en dispositivo: "
+                                        + device.getAlias());
+            notification.put("title", "CO de vuelta a estado NORMAL");
+
+            pushNotification(user, headers, notification, registration_ids);
+        }
+
+        if (device.getSensor2Status() == Status.ALARM) {
+            notification.put("click_action", ".MainActivity");
+            notification.put("body", "Gas natural de vuelta a estado NORMAL en dispositivo ID: "
+                                        + device.getAlias());
+            notification.put("title", "Gas Natural de vuelta a estado NORMAL");
+
+            pushNotification(user, headers, notification, registration_ids);
+        }
+
+        if (device.getSensor3Status() == Status.ALARM) {
+            notification.put("click_action", ".MainActivity");
+            notification.put("body", "Humo de vuelta a estado NORMAL en dispositivo ID: "
+                                        + device.getAlias());
+            notification.put("title", "Humo de vuelta a estado NORMAL");
 
             pushNotification(user, headers, notification, registration_ids);
         }
