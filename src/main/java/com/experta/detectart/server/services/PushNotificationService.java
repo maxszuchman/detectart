@@ -113,32 +113,12 @@ public class PushNotificationService {
         ObjectNode notification = mapper.createObjectNode();
         notification.put("icon", "experta_logo");
 
-        if (device.getSensor1Status() == Status.NORMAL) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Monóxido de carbóno de vuelta a estado NORMAL en dispositivo: "
-                                        + device.getAlias());
-            notification.put("title", "CO de vuelta a estado NORMAL");
+        notification.put("click_action", ".MainActivity");
+        notification.put("body", "Estado NORMAL otra vez, en dispositivo: "
+                                    + device.getAlias());
+        notification.put("title", "Vuelta a estado NORMAL");
 
-            pushNotification(user, headers, notification, registration_ids);
-        }
-
-        if (device.getSensor2Status() == Status.ALARM) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Gas natural de vuelta a estado NORMAL en dispositivo ID: "
-                                        + device.getAlias());
-            notification.put("title", "Gas Natural de vuelta a estado NORMAL");
-
-            pushNotification(user, headers, notification, registration_ids);
-        }
-
-        if (device.getSensor3Status() == Status.ALARM) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Humo de vuelta a estado NORMAL en dispositivo ID: "
-                                        + device.getAlias());
-            notification.put("title", "Humo de vuelta a estado NORMAL");
-
-            pushNotification(user, headers, notification, registration_ids);
-        }
+        pushNotification(user, headers, notification, registration_ids);
     }
 
 }
