@@ -76,8 +76,8 @@ public class PushNotificationService {
 
         if (device.getSensor1Status() == Status.ALARM) {
             notification.put("click_action", ".MainActivity");
-            notification.put("body", "Monóxido de carbóno por encima del límite seguro en dispositivo ID: "
-                                        + device.getMacAddress());
+            notification.put("body", "Monóxido de carbóno por encima del límite seguro en dispositivo: "
+                                        + device.getAlias());
             notification.put("title", "Alarma por CO!");
 
             pushNotification(user, headers, notification, registration_ids);
