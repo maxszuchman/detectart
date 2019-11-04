@@ -86,7 +86,7 @@ public class PushNotificationService {
         if (device.getSensor2Status() == Status.ALARM) {
             notification.put("click_action", ".MainActivity");
             notification.put("body", "Gas natural por encima del límite seguro en dispositivo ID: "
-                                        + device.getMacAddress());
+                                        + device.getAlias());
             notification.put("title", "Alarma por Gas Natural!");
 
             pushNotification(user, headers, notification, registration_ids);
@@ -95,7 +95,7 @@ public class PushNotificationService {
         if (device.getSensor3Status() == Status.ALARM) {
             notification.put("click_action", ".MainActivity");
             notification.put("body", "Humo encima del límite seguro en dispositivo ID: "
-                                        + device.getMacAddress());
+                                        + device.getAlias());
             notification.put("title", "Alarma por HUMO!");
 
             pushNotification(user, headers, notification, registration_ids);
