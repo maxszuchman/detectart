@@ -46,7 +46,7 @@ public class WhatsappService {
     public void sendWhatsappMessage(final String message, final String phoneNumber) {
         log.info("Enviando WHATSAPP desde {} a {}, mensaje: {}", TWILIO_PHONE_NUMBER, phoneNumber, message);
 
-        Message whatsappMessage = Message.creator(new PhoneNumber("whatsapp:+" + phoneNumber)
+        Message whatsappMessage = Message.creator(new PhoneNumber("whatsapp:" + phoneNumber)
                                                   , new PhoneNumber("whatsapp:+" + TWILIO_PHONE_NUMBER)
                                                   , message)
                                          .create();
