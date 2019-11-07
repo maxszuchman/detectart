@@ -1,7 +1,10 @@
 package com.experta.detectart.server.controller;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -13,14 +16,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.experta.detectart.server.exception.ResourceNotFoundException;
+import com.experta.detectart.server.model.Contact;
 import com.experta.detectart.server.model.Device;
 import com.experta.detectart.server.model.User;
 import com.experta.detectart.server.model.deviceData.DeviceData;
 import com.experta.detectart.server.model.deviceData.Position;
+import com.experta.detectart.server.model.deviceData.Sensor;
 import com.experta.detectart.server.model.deviceData.Status;
+import com.experta.detectart.server.repository.ContactRepository;
 import com.experta.detectart.server.repository.DeviceDataRepository;
 import com.experta.detectart.server.repository.DeviceRepository;
 import com.experta.detectart.server.services.PushNotificationService;
+import com.experta.detectart.twilio.EmergencyMessage;
+import com.experta.detectart.twilio.WhatsappService;
 
 @RestController
 public class DeviceDataController {
@@ -31,10 +39,16 @@ public class DeviceDataController {
     private PushNotificationService notificationService;
 
     @Autowired
+    private WhatsappService whatsappService;
+
+    @Autowired
     private DeviceDataRepository deviceDataRepository;
 
     @Autowired
     private DeviceRepository deviceRepository;
+
+    @Autowired
+    private ContactRepository contactRepository;
 
     @PostMapping(DEVICE_DATA)
     public ResponseEntity<?> createDeviceData(@Valid @RequestBody final DeviceData deviceData) {
@@ -61,7 +75,13 @@ public class DeviceDataController {
         if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() != Status.ALARM) {
 
             updateDeviceSensorsStatus(deviceData, device);
+            // Mandamos notificación PUSH
             notificationService.pushNotificationForEachSensorToToken(user, device);
+
+            // Mandamos mensajes de Whatsapp a los contactos
+            Collection<Contact> contacts = contactRepository.findByUserId(user.getId());
+            whatsappService.sendWhatsappMessageToContacts(new EmergencyMessage(getSensorsAsList(deviceData)
+                                                          , contacts));
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
@@ -83,6 +103,24 @@ public class DeviceDataController {
         deviceRepository.save(device);
 
         return ResponseEntity.ok().build();
+    }
+
+    private List<Sensor> getSensorsAsList(@Valid final DeviceData deviceData) {
+        List<Sensor> sensors = new ArrayList<Sensor>();
+
+        if (deviceData.getSensor1().getStatus() == Status.ALARM) {
+            sensors.add(deviceData.getSensor1());
+        }
+
+        if (deviceData.getSensor2().getStatus() == Status.ALARM) {
+            sensors.add(deviceData.getSensor2());
+        }
+
+        if (deviceData.getSensor3().getStatus() == Status.ALARM) {
+            sensors.add(deviceData.getSensor3());
+        }
+
+        return sensors;
     }
 
     private void updateDeviceSensorsStatus(@Valid final DeviceData deviceData, final Device device) {
