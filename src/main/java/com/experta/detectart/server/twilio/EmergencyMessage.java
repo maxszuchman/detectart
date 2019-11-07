@@ -13,7 +13,7 @@ public class EmergencyMessage {
 
     public static final String FROM_TELEPHONE_NUMBER = "14155238886";
 
-    private static final String GOOGLE_MAPS_API = "https://www.google.com/maps/search/?api=1query=";
+    private static final String GOOGLE_MAPS_API = "https://www.google.com/maps/search/?api=1&query=";
 
     private List<Sensor> sensors;
     private Collection<Contact> contacts;
