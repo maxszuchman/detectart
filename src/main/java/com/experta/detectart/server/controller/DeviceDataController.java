@@ -81,7 +81,9 @@ public class DeviceDataController {
             // Mandamos mensajes de Whatsapp a los contactos
             Collection<Contact> contacts = contactRepository.findByUserId(user.getId());
             whatsappService.sendWhatsappMessageToContacts(new EmergencyMessage(getSensorsAsList(deviceData)
-                                                          , contacts));
+                                                                              , contacts
+                                                                              , user
+                                                                              , device));
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
