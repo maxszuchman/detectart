@@ -26,6 +26,8 @@ public class EmergencyMessage {
         super();
         this.sensors = sensors;
         this.contacts = contacts;
+        this.user = user;
+        this.device = device;
         sentTime = Instant.now();
     }
 
