@@ -71,8 +71,8 @@ public class PushNotificationService {
         registration_ids.add(user.getApplicationToken());
 
         ObjectNode notification = mapper.createObjectNode();
-        notification.put("icon", "experta_logo");
-        notification.put("sound", "alarma");
+        notification.put("icon", "icon.png");
+        notification.put("sound", "alarma.mp3");
 
         if (device.getSensor1Status() == Status.ALARM) {
             notification.put("click_action", ".MainActivity");
@@ -111,7 +111,8 @@ public class PushNotificationService {
         registration_ids.add(user.getApplicationToken());
 
         ObjectNode notification = mapper.createObjectNode();
-        notification.put("icon", "experta_logo");
+        notification.put("icon", "icon.png");
+        notification.put("sound", "ding.mp3");
 
         notification.put("click_action", ".MainActivity");
         notification.put("body", "Estado NORMAL otra vez, en dispositivo: "
