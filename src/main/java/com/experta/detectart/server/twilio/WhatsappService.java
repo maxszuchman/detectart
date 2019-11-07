@@ -1,4 +1,4 @@
-package com.experta.detectart.twilio;
+package com.experta.detectart.server.twilio;
 
 
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.experta.detectart.server.model.Contact;
 
@@ -16,7 +16,7 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
-@Service
+@Component
 public class WhatsappService {
 
     private static final Logger log = LoggerFactory.getLogger(WhatsappService.class);

@@ -1,4 +1,4 @@
-package com.experta.detectart.twilio;
+package com.experta.detectart.server.twilio;
 
 import java.time.Instant;
 import java.util.Collection;

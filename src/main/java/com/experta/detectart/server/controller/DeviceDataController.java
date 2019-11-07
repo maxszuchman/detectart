@@ -27,8 +27,8 @@ import com.experta.detectart.server.repository.ContactRepository;
 import com.experta.detectart.server.repository.DeviceDataRepository;
 import com.experta.detectart.server.repository.DeviceRepository;
 import com.experta.detectart.server.services.PushNotificationService;
-import com.experta.detectart.twilio.EmergencyMessage;
-import com.experta.detectart.twilio.WhatsappService;
+import com.experta.detectart.server.twilio.EmergencyMessage;
+import com.experta.detectart.server.twilio.WhatsappService;
 
 @RestController
 public class DeviceDataController {
