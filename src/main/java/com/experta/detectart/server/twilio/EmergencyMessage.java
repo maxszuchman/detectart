@@ -30,11 +30,15 @@ public class EmergencyMessage {
             message += "S";
         }
 
+        message += " ";
+
         for (Sensor sensor : sensors) {
             message += sensor.getType() + ", ";
         }
 
         message = message.substring(0, message.length() - 2);
+        message += "!";
+
         return message;
     }
 
