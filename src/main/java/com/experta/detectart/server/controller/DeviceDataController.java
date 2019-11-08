@@ -9,6 +9,8 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,6 +34,8 @@ import com.experta.detectart.server.twilio.WhatsappService;
 
 @RestController
 public class DeviceDataController {
+
+    private static final Logger log = LoggerFactory.getLogger(DeviceDataController.class);
 
     public static final String DEVICE_DATA = "/deviceData";
 
@@ -80,10 +84,15 @@ public class DeviceDataController {
 
             // Mandamos mensajes de Whatsapp a los contactos
             Collection<Contact> contacts = contactRepository.findByUserId(user.getId());
-            whatsappService.sendWhatsappMessageToContacts(new EmergencyMessage(getSensorsAsList(deviceData)
-                                                                              , contacts
-                                                                              , user
-                                                                              , device));
+            try {
+                whatsappService.sendWhatsappMessageToContacts(new EmergencyMessage(getSensorsAsList(deviceData)
+                        , contacts
+                        , user
+                        , device));
+
+            } catch (Exception e) {
+                log.error("Error mandando mensajes de whatsapp: {}", e.toString());
+            }
 
         } else if (deviceData.getStatus() == Status.NORMAL && device.getGeneralStatus() == Status.ALARM) {
 
