@@ -4,6 +4,9 @@ target/
 !**/src/main/**
 !**/src/test/**
 
+### Variables de entorno del proyecto
+env.sh
+
 ### STS ###
 .apt_generated
 .classpath
