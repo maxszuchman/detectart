@@ -24,9 +24,8 @@ public class WhatsappService {
     private static final String TWILIO_PHONE_NUMBER = "14155238886";
 
     // Find your Account Sid and Token at twilio.com/console
-    // DANGER! This is insecure. See http://twil.io/secure
-    public static final String ACCOUNT_SID = "ACba78873758e7e325eadfdeda63ba75c3";
-    public static final String AUTH_TOKEN = "e372707ce4054e6db837dfebe7816331";
+    public static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    public static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
 
     private List<String> sids;
 
