@@ -11,9 +11,9 @@ import com.experta.detectart.server.model.deviceData.Sensor;
 
 public class EmergencyMessage {
 
-    public static final String FROM_TELEPHONE_NUMBER = "14155238886";
+    public static final String FROM_TELEPHONE_NUMBER = System.getenv("FROM_TELEPHONE_NUMBER");
 
-    private static final String GOOGLE_MAPS_API = "https://www.google.com/maps/search/?api=1&query=";
+    private static final String GOOGLE_MAPS_API = System.getenv("GOOGLE_MAPS_API");
 
     private List<Sensor> sensors;
     private Collection<Contact> contacts;

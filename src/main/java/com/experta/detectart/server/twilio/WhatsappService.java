@@ -21,7 +21,7 @@ public class WhatsappService {
 
     private static final Logger log = LoggerFactory.getLogger(WhatsappService.class);
 
-    private static final String TWILIO_PHONE_NUMBER = "14155238886";
+    private static final String TWILIO_PHONE_NUMBER = System.getenv("FROM_TELEPHONE_NUMBER");
 
     // Find your Account Sid and Token at twilio.com/console
     public static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
