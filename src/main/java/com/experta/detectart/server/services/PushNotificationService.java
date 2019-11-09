@@ -66,11 +66,21 @@ public class PushNotificationService {
 
         ResponseEntity<ObjectNode> response = restTemplate.exchange(requestEntity, ObjectNode.class);
 
-        PushNotification pushNotification = new PushNotification(null, user, device, notification.get("icon").asText()
-                                                                                   , notification.get("sound").asText()
-                                                                                   , notification.get("click_action").asText()
-                                                                                   , notification.get("body").asText()
-                                                                                   , notification.get("title").asText());
+        PushNotification pushNotification = new PushNotification(null
+                                                                , user.getId()
+                                                                , user.getFullName()
+                                                                , user.getApplicationToken()
+                                                                , device.getMacAddress()
+                                                                , device.getAlias()
+                                                                , device.getLatitude()
+                                                                , device.getLongitude()
+                                                                , device.getAccuracy()
+                                                                , notification.get("icon").asText()
+                                                                , notification.get("sound").asText()
+                                                                , notification.get("click_action").asText()
+                                                                , notification.get("body").asText()
+                                                                , notification.get("title").asText());
+
         pushNotificationRepository.save(pushNotification);
     }
 

@@ -1,16 +1,11 @@
 package com.experta.detectart.server.model;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "push_notifications")
@@ -20,15 +15,29 @@ public class PushNotification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
-    @JsonIgnore
-    private User user;
+    @NotEmpty
+    private String user_id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "device_id", nullable = false)
-    @JsonIgnore
-    private Device device;
+    @NotEmpty
+    private String user_name;
+
+    @NotEmpty
+    private String application_id;
+
+    @NotEmpty
+    private String device_id;
+
+    @NotEmpty
+    private String device_alias;
+
+    @NotEmpty
+    private Double latitude;
+
+    @NotEmpty
+    private Double longitude;
+
+    @NotEmpty
+    private Double accuracy;
 
     @NotEmpty
     private String icon;
@@ -47,12 +56,20 @@ public class PushNotification {
 
     public PushNotification() {}
 
-    public PushNotification(final Long id, final User user, final Device device, @NotEmpty final String icon, @NotEmpty final String sound,
-            @NotEmpty final String click_action, @NotEmpty final String body, @NotEmpty final String title) {
+    public PushNotification(final Long id, @NotEmpty final String user_id, @NotEmpty final String user_name,
+            @NotEmpty final String application_id, @NotEmpty final String device_id, @NotEmpty final String device_alias,
+            @NotEmpty final Double latitude, @NotEmpty final Double longitude, @NotEmpty final Double accuracy, @NotEmpty final String icon,
+            @NotEmpty final String sound, @NotEmpty final String click_action, @NotEmpty final String body, @NotEmpty final String title) {
         super();
         this.id = id;
-        this.user = user;
-        this.device = device;
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.application_id = application_id;
+        this.device_id = device_id;
+        this.device_alias = device_alias;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
         this.icon = icon;
         this.sound = sound;
         this.click_action = click_action;
@@ -68,20 +85,68 @@ public class PushNotification {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public String getUser_id() {
+        return user_id;
     }
 
-    public void setUser(final User user) {
-        this.user = user;
+    public void setUser_id(final String user_id) {
+        this.user_id = user_id;
     }
 
-    public Device getDevice() {
-        return device;
+    public String getUser_name() {
+        return user_name;
     }
 
-    public void setDevice(final Device device) {
-        this.device = device;
+    public void setUser_name(final String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getApplication_id() {
+        return application_id;
+    }
+
+    public void setApplication_id(final String application_id) {
+        this.application_id = application_id;
+    }
+
+    public String getDevice_id() {
+        return device_id;
+    }
+
+    public void setDevice_id(final String device_id) {
+        this.device_id = device_id;
+    }
+
+    public String getDevice_alias() {
+        return device_alias;
+    }
+
+    public void setDevice_alias(final String device_alias) {
+        this.device_alias = device_alias;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(final Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(final Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getAccuracy() {
+        return accuracy;
+    }
+
+    public void setAccuracy(final Double accuracy) {
+        this.accuracy = accuracy;
     }
 
     public String getIcon() {
@@ -123,4 +188,5 @@ public class PushNotification {
     public void setTitle(final String title) {
         this.title = title;
     }
+
 }

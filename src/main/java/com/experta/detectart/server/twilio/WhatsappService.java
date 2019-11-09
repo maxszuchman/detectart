@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.experta.detectart.server.model.Contact;
+import com.experta.detectart.server.model.Device;
+import com.experta.detectart.server.model.User;
 import com.experta.detectart.server.model.WhatsappMessage;
 import com.experta.detectart.server.repository.WhatsappRepository;
 
@@ -49,10 +51,20 @@ public class WhatsappService {
                                                   , emergencyMessage.getMessage())
                                          .create();
 
+        User user = emergencyMessage.getUser();
+        Device device = emergencyMessage.getDevice();
+
         WhatsappMessage messageLog = new WhatsappMessage(null
-                                                        , emergencyMessage.getUser()
-                                                        , emergencyMessage.getDevice()
-                                                        , contact
+                                                        , user.getId()
+                                                        , user.getFullName()
+                                                        , user.getApplicationToken()
+                                                        , device.getMacAddress()
+                                                        , device.getAlias()
+                                                        , device.getLatitude()
+                                                        , device.getLongitude()
+                                                        , device.getAccuracy()
+                                                        , contact.getFullName()
+                                                        , contact.getPhone()
                                                         , whatsappMessage.getSid()
                                                         , emergencyMessage.getMessage());
 

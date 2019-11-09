@@ -91,6 +91,10 @@ public class Contact extends AuditModel {
         this.phone = phone;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     public Contact copyInto(final Contact other) {
 
         other.setFirstName(this.firstName);
