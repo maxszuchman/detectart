@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.experta.detectart.server.model.Device;
+import com.experta.detectart.server.model.PushNotification;
 import com.experta.detectart.server.model.User;
 import com.experta.detectart.server.model.deviceData.Status;
+import com.experta.detectart.server.repository.PushNotificationRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -26,6 +29,9 @@ public class PushNotificationService {
 
     private static final String FIREBASE_URL_STRING = System.getenv("FIREBASE_URL");
     private static final String FIREBASE_AUTHORIZATION_FOR_EXPERTA = System.getenv("FIREBASE_AUTHORIZATION_FOR_EXPERTA");
+
+    @Autowired
+    private PushNotificationRepository pushNotificationRepository;
 
     private RestTemplate restTemplate = new RestTemplate();
     private URI FIREBASE_URI;
@@ -41,7 +47,7 @@ public class PushNotificationService {
         }
     }
 
-    private void pushNotification(final User user, final HttpHeaders headers, final ObjectNode notification, final ArrayNode registration_ids) {
+    private void pushNotification(final User user, final Device device, final HttpHeaders headers, final ObjectNode notification, final ArrayNode registration_ids) {
 
         ObjectNode body = mapper.createObjectNode();
         body.set("notification", notification);
@@ -59,6 +65,12 @@ public class PushNotificationService {
                                                                .body(body);
 
         ResponseEntity<ObjectNode> response = restTemplate.exchange(requestEntity, ObjectNode.class);
+
+        PushNotification pushNotification = new PushNotification(null, user, device, notification.get("icon").asText()
+                                                                                   , notification.get("sound").asText()
+                                                                                   , notification.get("click_action").asText()
+                                                                                   , notification.get("body").asText()
+                                                                                   , notification.get("title").asText());
     }
 
     public void pushNotificationForEachSensorToToken(final User user, final Device device) {
@@ -80,7 +92,7 @@ public class PushNotificationService {
                                         + device.getAlias());
             notification.put("title", "Alarma por CO!");
 
-            pushNotification(user, headers, notification, registration_ids);
+            pushNotification(user, device, headers, notification, registration_ids);
         }
 
         if (device.getSensor2Status() == Status.ALARM) {
@@ -89,7 +101,7 @@ public class PushNotificationService {
                                         + device.getAlias());
             notification.put("title", "Alarma por Gas Natural!");
 
-            pushNotification(user, headers, notification, registration_ids);
+            pushNotification(user, device, headers, notification, registration_ids);
         }
 
         if (device.getSensor3Status() == Status.ALARM) {
@@ -98,7 +110,7 @@ public class PushNotificationService {
                                         + device.getAlias());
             notification.put("title", "Alarma por HUMO!");
 
-            pushNotification(user, headers, notification, registration_ids);
+            pushNotification(user, device, headers, notification, registration_ids);
         }
     }
 
@@ -119,7 +131,7 @@ public class PushNotificationService {
                                     + device.getAlias());
         notification.put("title", "Vuelta a estado NORMAL");
 
-        pushNotification(user, headers, notification, registration_ids);
+        pushNotification(user, device, headers, notification, registration_ids);
     }
 
 }

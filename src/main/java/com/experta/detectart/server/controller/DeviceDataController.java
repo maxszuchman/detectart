@@ -79,16 +79,21 @@ public class DeviceDataController {
         if (deviceData.getStatus() == Status.ALARM && device.getGeneralStatus() != Status.ALARM) {
 
             updateDeviceSensorsStatus(deviceData, device);
+
             // Mandamos notificación PUSH
-            notificationService.pushNotificationForEachSensorToToken(user, device);
+            try {
+                notificationService.pushNotificationForEachSensorToToken(user, device);
+            } catch (Exception e) {
+                log.error("Error mandando notificaciones Push: {}", e.toString());
+            }
 
             // Mandamos mensajes de Whatsapp a los contactos
             Collection<Contact> contacts = contactRepository.findByUserId(user.getId());
             try {
                 whatsappService.sendWhatsappMessageToContacts(new EmergencyMessage(getSensorsAsList(deviceData)
-                        , contacts
-                        , user
-                        , device));
+                                                                , contacts
+                                                                , user
+                                                                , device));
 
             } catch (Exception e) {
                 log.error("Error mandando mensajes de whatsapp: {}", e.toString());
