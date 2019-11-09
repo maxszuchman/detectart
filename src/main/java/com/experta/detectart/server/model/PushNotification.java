@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "push_notifications")
@@ -30,13 +31,13 @@ public class PushNotification {
     @NotEmpty
     private String device_alias;
 
-    @NotEmpty
+    @NotNull
     private Double latitude;
 
-    @NotEmpty
+    @NotNull
     private Double longitude;
 
-    @NotEmpty
+    @NotNull
     private Double accuracy;
 
     @NotEmpty

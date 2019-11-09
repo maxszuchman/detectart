@@ -31,13 +31,13 @@ public class WhatsappMessage {
     @NotEmpty
     private String device_alias;
 
-    @NotEmpty
+    @NotNull
     private Double latitude;
 
-    @NotEmpty
+    @NotNull
     private Double longitude;
 
-    @NotEmpty
+    @NotNull
     private Double accuracy;
 
     @NotEmpty
