@@ -55,6 +55,14 @@ public class EmergencyMessage {
         return contacts;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
     public Instant getSentTime() {
         return sentTime;
     }

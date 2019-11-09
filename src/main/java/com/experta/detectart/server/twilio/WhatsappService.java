@@ -1,14 +1,14 @@
 package com.experta.detectart.server.twilio;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.experta.detectart.server.model.Contact;
+import com.experta.detectart.server.model.WhatsappMessage;
+import com.experta.detectart.server.repository.WhatsappRepository;
 
 //Install the Java helper library from twilio.com/docs/java/install
 
@@ -27,29 +27,35 @@ public class WhatsappService {
     public static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
     public static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
 
-    private List<String> sids;
+    @Autowired
+    WhatsappRepository whatsappRepository;
 
-    public WhatsappService() {
-        sids = new ArrayList<String>();
-    }
+    public WhatsappService() {}
 
     public void sendWhatsappMessageToContacts(final EmergencyMessage emergencyMessage) {
 
        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
        for (Contact contact : emergencyMessage.getContacts()) {
-           sendWhatsappMessage(emergencyMessage.getMessage(), contact.getPhone());
+           sendWhatsappMessage(emergencyMessage, contact);
        }
     }
 
-    public void sendWhatsappMessage(final String message, final String phoneNumber) {
-        log.info("Enviando WHATSAPP desde {} a {}, mensaje: {}", TWILIO_PHONE_NUMBER, phoneNumber, message);
+    public void sendWhatsappMessage(final EmergencyMessage emergencyMessage, final Contact contact) {
+        log.info("Enviando WHATSAPP desde {} a {}, mensaje: {}", TWILIO_PHONE_NUMBER, contact.getPhone(), emergencyMessage.getMessage());
 
-        Message whatsappMessage = Message.creator(new PhoneNumber("whatsapp:" + phoneNumber)
+        Message whatsappMessage = Message.creator(new PhoneNumber("whatsapp:" + contact.getPhone())
                                                   , new PhoneNumber("whatsapp:+" + TWILIO_PHONE_NUMBER)
-                                                  , message)
+                                                  , emergencyMessage.getMessage())
                                          .create();
 
-        sids.add(whatsappMessage.getSid());
+        WhatsappMessage messageLog = new WhatsappMessage(null
+                                                        , emergencyMessage.getUser()
+                                                        , emergencyMessage.getDevice()
+                                                        , contact
+                                                        , whatsappMessage.getSid()
+                                                        , emergencyMessage.getMessage());
+
+        whatsappRepository.save(messageLog);
     }
 }
