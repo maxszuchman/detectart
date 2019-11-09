@@ -71,6 +71,7 @@ public class PushNotificationService {
                                                                                    , notification.get("click_action").asText()
                                                                                    , notification.get("body").asText()
                                                                                    , notification.get("title").asText());
+        pushNotificationRepository.save(pushNotification);
     }
 
     public void pushNotificationForEachSensorToToken(final User user, final Device device) {
