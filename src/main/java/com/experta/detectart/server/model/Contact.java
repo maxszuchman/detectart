@@ -91,6 +91,7 @@ public class Contact extends AuditModel {
         this.phone = phone;
     }
 
+    @JsonIgnore
     public String getFullName() {
         return firstName + " " + lastName;
     }
