@@ -47,17 +47,17 @@ public class PushNotificationService {
         }
     }
 
-    private void pushNotification(final User user, final Device device, final HttpHeaders headers, final ObjectNode notification, final ArrayNode registration_ids) {
+    private void pushNotification(final User user, final Device device, final HttpHeaders headers, final ObjectNode data, final ArrayNode registration_ids) {
 
         ObjectNode body = mapper.createObjectNode();
-        body.set("notification", notification);
+        body.set("data", data);
         body.set("registration_ids", registration_ids);
 
         log.info("Sending a PUSH notification to {} {}, {}, with token {} and body {}"
                 , user.getFullName()
                 , user.getId()
                 , user.getApplicationToken()
-                , notification.toPrettyString());
+                , data.toPrettyString());
         log.info(body.toPrettyString());
 
         RequestEntity<ObjectNode> requestEntity = RequestEntity.post(FIREBASE_URI)
@@ -75,11 +75,11 @@ public class PushNotificationService {
                                                                 , device.getLatitude()
                                                                 , device.getLongitude()
                                                                 , device.getAccuracy()
-                                                                , notification.get("icon").asText()
-                                                                , notification.get("sound").asText()
-                                                                , notification.get("click_action").asText()
-                                                                , notification.get("body").asText()
-                                                                , notification.get("title").asText());
+                                                                , data.get("icon").asText()
+                                                                , data.get("sound").asText()
+                                                                , data.get("click_action").asText()
+                                                                , data.get("body").asText()
+                                                                , data.get("title").asText());
 
         pushNotificationRepository.save(pushNotification);
     }
@@ -93,35 +93,35 @@ public class PushNotificationService {
         ArrayNode registration_ids = mapper.createArrayNode();
         registration_ids.add(user.getApplicationToken());
 
-        ObjectNode notification = mapper.createObjectNode();
-        notification.put("icon", "icon.png");
-        notification.put("sound", "alarma.mp3");
+        ObjectNode data = mapper.createObjectNode();
+        data.put("icon", "icon.png");
+        data.put("sound", "alarma.mp3");
 
         if (device.getSensor1Status() == Status.ALARM) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Monóxido de carbóno por encima del límite seguro en dispositivo: "
+            data.put("click_action", ".MainActivity");
+            data.put("body", "Monóxido de carbóno por encima del límite seguro en dispositivo: "
                                         + device.getAlias());
-            notification.put("title", "Alarma por CO!");
+            data.put("title", "Alarma por CO!");
 
-            pushNotification(user, device, headers, notification, registration_ids);
+            pushNotification(user, device, headers, data, registration_ids);
         }
 
         if (device.getSensor2Status() == Status.ALARM) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Gas natural por encima del límite seguro en dispositivo ID: "
+            data.put("click_action", ".MainActivity");
+            data.put("body", "Gas natural por encima del límite seguro en dispositivo ID: "
                                         + device.getAlias());
-            notification.put("title", "Alarma por Gas Natural!");
+            data.put("title", "Alarma por Gas Natural!");
 
-            pushNotification(user, device, headers, notification, registration_ids);
+            pushNotification(user, device, headers, data, registration_ids);
         }
 
         if (device.getSensor3Status() == Status.ALARM) {
-            notification.put("click_action", ".MainActivity");
-            notification.put("body", "Humo encima del límite seguro en dispositivo ID: "
+            data.put("click_action", ".MainActivity");
+            data.put("body", "Humo encima del límite seguro en dispositivo ID: "
                                         + device.getAlias());
-            notification.put("title", "Alarma por HUMO!");
+            data.put("title", "Alarma por HUMO!");
 
-            pushNotification(user, device, headers, notification, registration_ids);
+            pushNotification(user, device, headers, data, registration_ids);
         }
     }
 
@@ -133,16 +133,16 @@ public class PushNotificationService {
         ArrayNode registration_ids = mapper.createArrayNode();
         registration_ids.add(user.getApplicationToken());
 
-        ObjectNode notification = mapper.createObjectNode();
-        notification.put("icon", "icon.png");
-        notification.put("sound", "ding.mp3");
+        ObjectNode data = mapper.createObjectNode();
+        data.put("icon", "icon.png");
+        data.put("sound", "ding.mp3");
 
-        notification.put("click_action", ".MainActivity");
-        notification.put("body", "Estado NORMAL otra vez, en dispositivo: "
+        data.put("click_action", ".MainActivity");
+        data.put("body", "Estado NORMAL otra vez, en dispositivo: "
                                     + device.getAlias());
-        notification.put("title", "Vuelta a estado NORMAL");
+        data.put("title", "Vuelta a estado NORMAL");
 
-        pushNotification(user, device, headers, notification, registration_ids);
+        pushNotification(user, device, headers, data, registration_ids);
     }
 
 }
