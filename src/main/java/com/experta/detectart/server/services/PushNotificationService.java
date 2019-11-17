@@ -77,7 +77,7 @@ public class PushNotificationService {
                                                                 , device.getAccuracy()
                                                                 , data.get("icon").asText()
                                                                 , data.get("sound").asText()
-                                                                , data.get("click_action").asText()
+                                                                , data.get("click_action") != null? data.get("click_action").asText() : "";
                                                                 , data.get("body").asText()
                                                                 , data.get("title").asText());
 
