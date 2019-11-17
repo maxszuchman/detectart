@@ -98,7 +98,7 @@ public class PushNotificationService {
         data.put("sound", "alarma.mp3");
 
         if (device.getSensor1Status() == Status.ALARM) {
-            data.put("click_action", ".MainActivity");
+            data.put("click_action", "com.experta.ui.COActivity");
             data.put("body", "Monóxido de carbóno por encima del límite seguro en dispositivo: "
                                         + device.getAlias());
             data.put("title", "Alarma por CO!");
@@ -107,7 +107,7 @@ public class PushNotificationService {
         }
 
         if (device.getSensor2Status() == Status.ALARM) {
-            data.put("click_action", ".MainActivity");
+            data.put("click_action", "com.experta.ui.GASActivity");
             data.put("body", "Gas natural por encima del límite seguro en dispositivo ID: "
                                         + device.getAlias());
             data.put("title", "Alarma por Gas Natural!");
@@ -116,7 +116,7 @@ public class PushNotificationService {
         }
 
         if (device.getSensor3Status() == Status.ALARM) {
-            data.put("click_action", ".MainActivity");
+            data.put("click_action", "com.experta.ui.SMOKEActivity");
             data.put("body", "Humo encima del límite seguro en dispositivo ID: "
                                         + device.getAlias());
             data.put("title", "Alarma por HUMO!");
