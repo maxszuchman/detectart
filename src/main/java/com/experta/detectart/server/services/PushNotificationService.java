@@ -137,7 +137,6 @@ public class PushNotificationService {
         data.put("icon", "icon.png");
         data.put("sound", "ding.mp3");
 
-        data.put("click_action", ".MainActivity");
         data.put("body", "Estado NORMAL otra vez, en dispositivo: "
                                     + device.getAlias());
         data.put("title", "Vuelta a estado NORMAL");
