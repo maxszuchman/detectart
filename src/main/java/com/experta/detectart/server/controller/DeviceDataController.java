@@ -116,6 +116,7 @@ public class DeviceDataController {
             device.setAccuracy(deviceDataPosition.getAccuracy());
         }
 
+        device.refreshGeneralStatus();
         deviceRepository.save(device);
 
         return ResponseEntity.ok().build();

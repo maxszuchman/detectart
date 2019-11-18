@@ -53,12 +53,11 @@ public class PushNotificationService {
         body.set("data", data);
         body.set("registration_ids", registration_ids);
 
-        log.info("Sending a PUSH notification to {} {}, {}, with token {} and body {}"
+        log.info("Sending a PUSH notification to {}, {}, with token {} and body {}"
                 , user.getFullName()
                 , user.getId()
                 , user.getApplicationToken()
-                , data.toPrettyString());
-        log.info(body.toPrettyString());
+                , body.toPrettyString());
 
         RequestEntity<ObjectNode> requestEntity = RequestEntity.post(FIREBASE_URI)
                                                                .headers(headers)
@@ -140,6 +139,26 @@ public class PushNotificationService {
         data.put("body", "Estado NORMAL otra vez, en dispositivo: "
                                     + device.getAlias());
         data.put("title", "Vuelta a estado NORMAL");
+
+        pushNotification(user, device, headers, data, registration_ids);
+    }
+
+    public void pushNotificationDeviceInactive(final User user, final Device device) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.add(HttpHeaders.AUTHORIZATION, FIREBASE_AUTHORIZATION_FOR_EXPERTA);
+
+        ArrayNode registration_ids = mapper.createArrayNode();
+        registration_ids.add(user.getApplicationToken());
+
+        ObjectNode data = mapper.createObjectNode();
+        data.put("icon", "icon.png");
+        data.put("sound", "ding.mp3");
+
+        data.put("body", "El dispositivo " + device.getAlias() + " no ha enviado datos por más de un minuto. "
+                         + "Por favor chequee su conexión a Internet, ya que no podremos enviarle notificaciones ni "
+                         + "mensajes si hay una alarma.");
+        data.put("title", "Dispositivo INACTIVO");
 
         pushNotification(user, device, headers, data, registration_ids);
     }

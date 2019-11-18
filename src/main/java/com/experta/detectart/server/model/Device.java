@@ -57,6 +57,8 @@ public class Device extends AuditModel {
     private Status sensor2Status;
     @Enumerated(value = EnumType.STRING)
     private Status sensor3Status;
+    @Enumerated(value = EnumType.STRING)
+    private Status generalStatus;
 
     public Device() {
         sensorDataUpdatedAt = Date.from(Instant.now());
@@ -158,22 +160,30 @@ public class Device extends AuditModel {
         this.sensor3Status = sensor3Status;
     }
 
+    @JsonIgnore
     public Status getGeneralStatus() {
+        return generalStatus;
+    }
+
+    @JsonIgnore
+    public Status refreshGeneralStatus() {
 
         Date now = Date.from(Instant.now());
         long diffInMillies = Math.abs(now.getTime() - sensorDataUpdatedAt.getTime());
 
         if (diffInMillies > MILLIS_WITHOUT_DATA_TO_SET_AS_INACTIVE) {
 
-            return Status.INACTIVE;
+            generalStatus = Status.INACTIVE;
         } else {
 
             if (sensor1Status == Status.NORMAL && sensor2Status == Status.NORMAL && sensor3Status == Status.NORMAL) {
-                return Status.NORMAL;
+                generalStatus = Status.NORMAL;
             } else {
-                return Status.ALARM;
+                generalStatus = Status.ALARM;
             }
         }
+
+        return generalStatus;
     }
 
     @JsonIgnore
@@ -181,6 +191,7 @@ public class Device extends AuditModel {
         sensor1Status = Status.NORMAL;
         sensor2Status = Status.NORMAL;
         sensor3Status = Status.NORMAL;
+        generalStatus = Status.NORMAL;
     }
 
     public Date getSensorDataUpdatedAt() {

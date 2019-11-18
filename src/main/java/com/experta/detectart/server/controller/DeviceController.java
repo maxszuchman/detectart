@@ -79,8 +79,8 @@ public class DeviceController {
 
     @PatchMapping(USERS + "/{userId}" + DEVICES + "/{macAddress}")
     public Device updateDevice(@PathVariable (value = "userId") final String userId,
-                                 @PathVariable (value = "macAddress") final String macAddress,
-                                 @Valid @RequestBody final Device deviceRequest) {
+                               @PathVariable (value = "macAddress") final String macAddress,
+                               @Valid @RequestBody final Device deviceRequest) {
 
         if(!userRepository.existsById(userId)) {
             throw new ResourceNotFoundException("UserId " + userId + " not found");
