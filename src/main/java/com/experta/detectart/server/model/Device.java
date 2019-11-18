@@ -160,7 +160,6 @@ public class Device extends AuditModel {
         this.sensor3Status = sensor3Status;
     }
 
-    @JsonIgnore
     public Status getGeneralStatus() {
         return generalStatus;
     }
