@@ -1,6 +1,5 @@
 package com.experta.detectart.server.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -37,7 +36,6 @@ public class Contact extends AuditModel {
     private String lastName;
 
     @NotEmpty
-    @Column(unique = true)
     private String phone;
 
     public Contact() {}
